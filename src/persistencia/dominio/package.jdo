@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE jdo PUBLIC
+    "-//Sun Microsystems, Inc.//DTD Java Data Objects Metadata 2.0//EN"
+    "http://java.sun.com/dtd/jdo_2_0.dtd">
+<jdo>
+    <package name="persistencia.dominio">
+    
+        <class name="Sistema" identity-type="application">
+        	<inheritance strategy="new-table"/>
+            <field name="id" primary-key="true" value-strategy="identity" persistence-modifier="persistent"/>
+            <field name="nombre" persistence-modifier="persistent"/>
+            <field name="url" persistence-modifier="persistent"/>
+            <field name="ip" persistence-modifier="persistent"/>
+            <field name="pathLogo" persistence-modifier="persistent"/>
+        </class>
+        
+        <class name="Persona" identity-type="application">
+        	<inheritance strategy="new-table"/>
+            <field name="id" primary-key="true" value-strategy="identity" persistence-modifier="persistent"/>
+            <field name="nombre" persistence-modifier="persistent"/>
+            <field name="apellido" persistence-modifier="persistent"/>
+            <field name="email" unique="true" persistence-modifier="persistent"/>
+            <field name="dni_cuil_cuit" unique="true" persistence-modifier="persistent"/>
+            <field name="tel_contacto" unique="true" persistence-modifier="persistent"/>
+            <field name="registro" unique="true" persistence-modifier="persistent"/>
+            <field name="baneado" persistence-modifier="persistent"/>
+            <field name="eliminado" persistence-modifier="persistent"/>
+        </class>
+        
+        <class name="Usuario" persistence-capable-superclass = "Persona">
+        	<inheritance strategy="new-table"/>
+            <field name="id" primary-key="true" value-strategy="identity" persistence-modifier="persistent"/>
+            <field name="nombre_usuario" unique="true" persistence-modifier="persistent"/>
+            <field name="contrasena" persistence-modifier="persistent"/>
+            <field name="cambiar_contrasena" persistence-modifier="persistent"/>
+            <field name="permiso" persistence-modifier="persistent"/>
+        </class>
+        
+        <class name="Maquina" identity-type="application">
+        	<inheritance strategy="new-table"/>
+            <field name="id" primary-key="true" value-strategy="identity" persistence-modifier="persistent"/>
+            <field name="mac" unique="true" persistence-modifier="persistent"/>
+            <field name="ip" persistence-modifier="persistent"/>
+            <field name="baneado" persistence-modifier="persistent"/>
+            <field name="eliminada" persistence-modifier="persistent"/>
+        </class>
+        
+        <class name="Producto" identity-type="application">
+        	<inheritance strategy="new-table"/>
+            <field name="id" primary-key="true" value-strategy="identity" persistence-modifier="persistent"/>
+            <field name="nombre" persistence-modifier="persistent"/>
+            <field name="autores" persistence-modifier="persistent"/>
+            <field name="empresa" persistence-modifier="persistent"/>
+            <field name="fecha_de_lanzamiento" persistence-modifier="persistent"/>
+            <field name="eliminado" persistence-modifier="persistent"/>
+        </class>
+        
+        <class name="Version" identity-type="application">
+        	<inheritance strategy="new-table"/>
+            <field name="id" primary-key="true" value-strategy="identity" persistence-modifier="persistent"/>
+            <field name="producto"  persistence-modifier="persistent">
+                <foreign-key name="fk_producto_version" delete-action="cascade"/>
+            </field>
+            <field name="version" persistence-modifier="persistent"/>
+            <field name="keyDecript" unique="true" persistence-modifier="persistent"/>
+            <field name="tiene_posterior" persistence-modifier="persistent"/>
+            <field name="eliminada" persistence-modifier="persistent"/>
+        </class>
+        
+        <class name="PersonaMaquina" identity-type="application">
+        	<inheritance strategy="new-table"/>
+            <field name="id" primary-key="true" value-strategy="identity" persistence-modifier="persistent"/>
+            <field name="propietario" persistence-modifier="persistent">
+                <foreign-key name="fk_propietario_pers_maq" delete-action="cascade"/>
+            </field>
+            <field name="maquina" persistence-modifier="persistent">
+                <foreign-key name="fk_maquina_pers_maq" delete-action="cascade"/>
+            </field>
+            <field name="fecha_de_asociacion" persistence-modifier="persistent"/>
+        </class>
+        
+        <class name="PersonaProductoVersion" identity-type="application">
+        	<inheritance strategy="new-table"/>
+            <field name="id" primary-key="true" value-strategy="identity" persistence-modifier="persistent"/>
+            <field name="propietario" persistence-modifier="persistent"
+                <foreign-key name="fk_propietario_copia" delete-action="null"/>
+            </field>
+            <field name="producto_version" persistence-modifier="persistent">
+                <foreign-key name="fk_producto_copia" delete-action="cascade"/>
+            </field>
+            <field name="fecha_de_adquisicion" persistence-modifier="persistent"/>
+            <field name="fecha_de_caducacion" persistence-modifier="persistent"/>
+            <field name="baneada" persistence-modifier="persistent"/>
+            <field name="fuera_circulacion" persistence-modifier="persistent"/>
+        </class>
+        
+        <class name="Clave" identity-type="application">
+        	<inheritance strategy="new-table"/>
+            <field name="id" primary-key="true" value-strategy="identity" persistence-modifier="persistent"/>
+            <field name="persona_producto" persistence-modifier="persistent">
+                <foreign-key name="fk_copia_clave" delete-action="cascade"/>
+            </field>
+            <field name="persona_maquina" persistence-modifier="persistent">
+                <foreign-key name="fk_maquina_clave" delete-action="cascade"/>
+            </field>
+            <field name="clave" unique="true" persistence-modifier="persistent"/>
+            <field name="activa" persistence-modifier="persistent"/>
+            <field name="fecha_de_generacion" persistence-modifier="persistent"/>
+            <field name="cant_de_activaciones" persistence-modifier="persistent"/>
+            <field name="cant_de_generaciones" persistence-modifier="persistent"/>
+            <field name="baneado" persistence-modifier="persistent"/>
+            <field name="eliminado" persistence-modifier="persistent"/>
+        </class>
+        
+        <class  name="ClaveGenerada" identity-type="application">
+        	<inheritance strategy="new-table"/>
+            <field name="id" primary-key="true" value-strategy="identity" persistence-modifier="persistent"/>
+            <field name="datos" persistence-modifier="persistent">
+                <foreign-key name="fk_datos_clave_generada" delete-action="null"/>
+            </field>
+            <field name="clave" unique="true" persistence-modifier="persistent"/>
+            <field name="fecha_de_generacion" persistence-modifier="persistent"/>
+        </class>
+        
+        <class name="Auditoria" identity-type="application">
+        	<inheritance strategy="new-table"/>
+            <field name="id" primary-key="true" value-strategy="identity" persistence-modifier="persistent"/>
+            <field name="fecha" persistence-modifier="persistent"/>
+            <field name="accion" persistence-modifier="persistent"/>
+            <field name="auditor" persistence-modifier="persistent">
+                <foreign-key name="fk_auditor_auditoria" delete-action="null"/>
+            </field>
+            <field name="solicitante" persistence-modifier="persistent">
+                <foreign-key name="fk_solicitante_auditoria" delete-action="null"/>
+            </field>
+            <field name="maquina" persistence-modifier="persistent">
+                <foreign-key name="fk_maquina_auditoria" delete-action="null"/>
+            </field>
+            <field name="producto" persistence-modifier="persistent">
+                <foreign-key name="fk_producto_auditoria" delete-action="null"/>
+            </field>
+            <field name="extra" persistence-modifier="persistent"/>
+            <field name="satisfactorio" persistence-modifier="persistent"/>
+        </class>
+    </package>
+</jdo>
